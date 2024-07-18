@@ -6,10 +6,14 @@ document.querySelectorAll("path").forEach(function (path) {
         });
 
         document.getElementById("CurrentCity").textContent = result.place;
+        var discordButton = document.getElementById('discord-Button');
+        var newDiscordButton = discordButton.cloneNode(true);
+        discordButton.parentNode.replaceChild(newDiscordButton, discordButton);
 
         // 監聽 discord-Button 的點擊事件
-        document.getElementById('discord-Button').addEventListener('click', function() {
-            const webhookUrl = 'https://discord.com/api/webhooks/1262415214771568720/_2XyX9FxqUBk9NARl9NSrX9WHPttU_pJ1qeefoQTpLLfx5wtZos4vSUrmmdh-Zjz6NSF'; 
+        newDiscordButton.addEventListener('click', function() {
+            const webhookUrl = 'https://discord.com/api/webhooks/1162404320399085690/y6pNTIyURc4-ftZIicqF49uzwNTF70bRw_9D1QyVrmxzbwagnXXX-HNW2E6QvzUJVUVS';
+            // const webhookUrl = 'https://discord.com/api/webhooks/1262415214771568720/_2XyX9FxqUBk9NARl9NSrX9WHPttU_pJ1qeefoQTpLLfx5wtZos4vSUrmmdh-Zjz6NSF'; 
             const weatherApiUrl = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-A7E5A07D-8252-4F34-8274-69CD9263DF62';
 
             fetch(weatherApiUrl)
@@ -59,6 +63,8 @@ document.querySelectorAll("path").forEach(function (path) {
                 const tomorrowNightPoP = tomorrowNight ? tomorrowNight.parameter.parameterName : '-';
 
                 const discordEmbed = {
+                    username: "氣象小超人", 
+                    avatar_url: "https://i.imgur.com/2qx5g3i.jpg", 
                     embeds: [{
                         title: `${result.place} 天氣預報`,
                         fields: [
@@ -69,9 +75,12 @@ document.querySelectorAll("path").forEach(function (path) {
                             { name: '明日早上至晚上的天氣預報', value: `${tomorrowNightPoP}，溫度 ${tomorrowNightTemp}，降雨量 ${currentPoP.time[2].parameter.parameterName} %` },
                         ],
                         color: 0x3498db, 
+                        image: {
+                            url: "https://i.pinimg.com/originals/5f/93/73/5f9373cc2e4f4e219612ed4426923116.jpg" 
+                        },
                         timestamp: new Date()
                     }]
-                };
+                };                
                 return fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
@@ -92,6 +101,8 @@ document.querySelectorAll("path").forEach(function (path) {
         });
     });
 });
+
+
 
 
 
