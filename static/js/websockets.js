@@ -1,4 +1,7 @@
-const websocket = new WebSocket(`ws://${location.host}/ws`);
+const websocket =
+  window.location.protocol == "https:"
+    ? new WebSocket(`wss://${location.host}/ws`)
+    : new WebSocket(`ws://${location.host}/ws`);
 
 const clientsTotal = document.getElementById("client-total");
 const messageContainer = document.getElementById("message-container");
@@ -33,24 +36,28 @@ function sendMessage() {
     type: "chat-message",
     data: {
       name: nameInput.value,
-      message: messageInput.value,
+      message: messageInput.value
     }
   };
   websocket.send(JSON.stringify(data));
   addMessageToUI(true, data.data);
   messageInput.value = "";
-
 }
 
 // checkName
 let hasAlerted = false;
 
 function checkName() {
-  if (nameInput.value.trim() === "" || nameInput.value.trim() === "請輸入名字") {
+  if (
+    nameInput.value.trim() === "" ||
+    nameInput.value.trim() === "請輸入名字"
+  ) {
     if (!hasAlerted) {
       alert("要在框框上方輸入名字哦！");
       hasAlerted = true;
-      setTimeout(() => { hasAlerted = false; }, 1000); 
+      setTimeout(() => {
+        hasAlerted = false;
+      }, 1000);
     }
     nameInput.focus();
     return false;
@@ -62,10 +69,14 @@ function addMessageToUI(isOwnMessage, data) {
   clearFeedback();
   const element = `
     <li class="${isOwnMessage ? "message__right" : "message__left"}">
-      <span class="${isOwnMessage ? "message__right--name" : "message__left--name"}">
+      <span class="${
+        isOwnMessage ? "message__right--name" : "message__left--name"
+      }">
         ${data.name} 
       </span>
-      <div class="${isOwnMessage ? "message__right--text" : "message__left--text"}">
+      <div class="${
+        isOwnMessage ? "message__right--text" : "message__left--text"
+      }">
         ${data.message}
       </div>
     </li>
@@ -84,7 +95,7 @@ function scrollToBottom() {
 // send feedback
 function debounce(func, delay) {
   let timer;
-  return function(...args) {
+  return function (...args) {
     clearTimeout(timer);
     timer = setTimeout(() => func.apply(this, args), delay);
   };
@@ -92,13 +103,15 @@ function debounce(func, delay) {
 
 function sendTypingStatus(isTyping) {
   if (checkName()) {
-    websocket.send(JSON.stringify({
-      type: "typing",
-      data: {
-        name: nameInput.value,
-        isTyping: isTyping
-      }
-    }));
+    websocket.send(
+      JSON.stringify({
+        type: "typing",
+        data: {
+          name: nameInput.value,
+          isTyping: isTyping
+        }
+      })
+    );
   }
 }
 
@@ -106,27 +119,25 @@ let typingTimer;
 const TYPING_TIMEOUT = 5000;
 const debouncedSendTypingStatus = debounce(sendTypingStatus, 600);
 
-function longDebounce(func, delay){
+function longDebounce(func, delay) {
   clearTimeout(typingTimer);
   typingTimer = setTimeout(func, delay);
 }
 
 messageInput.addEventListener("focus", () => {
   if (checkName()) {
-    sendTypingStatus(true);  
+    sendTypingStatus(true);
   }
 });
 
 messageInput.addEventListener("input", () => {
-  debouncedSendTypingStatus(true);  
+  debouncedSendTypingStatus(true);
   longDebounce(() => sendTypingStatus(false), TYPING_TIMEOUT);
 });
 
 messageInput.addEventListener("blur", () => {
-  sendTypingStatus(false);  
+  sendTypingStatus(false);
 });
-
-
 
 // handel feedback
 function handleFeedback(data) {
@@ -154,13 +165,15 @@ window.addEventListener("unload", clearTypingStatus);
 
 function clearTypingStatus() {
   if (websocket.readyState === WebSocket.OPEN) {
-    websocket.send(JSON.stringify({
-      type: "typing",
-      data: {
-        name: nameInput.value,
-        isTyping: false
-      }
-    }));
+    websocket.send(
+      JSON.stringify({
+        type: "typing",
+        data: {
+          name: nameInput.value,
+          isTyping: false
+        }
+      })
+    );
   }
 }
 
