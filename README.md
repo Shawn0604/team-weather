@@ -2,7 +2,7 @@
 
 ## 組員工作分配表
 
-- **江**：基礎專案建置、專案部署（github action, EC2 user data）
+- **jiang**：基礎專案建置、專案部署（github action, EC2 user data）
 - **尚峰**：Discord Webhook 串接、首頁協作版面調整
 - **承廷**：webscoket 聊天室製作、首頁協作版面調整
 - **哲明**：天氣 API 串接、台灣地圖製作、縣市詳細資料製作、首頁版面主要製作
