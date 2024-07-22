@@ -1,7 +1,5 @@
 # team-weather
 
-展示網址：https://no6.taipei-day-trip.xyz
-
 ## 組員工作分配表
 
 - **江**：基礎專案建置、專案部署（github action, EC2 user data）
